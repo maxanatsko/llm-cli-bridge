@@ -7,7 +7,7 @@ import { PROTOCOL } from "./constants.js";
 import { getToolDefinitions, getPromptDefinitions, executeTool, toolExists, getPromptMessage } from "./tools/index.js";
 const server = new Server({
     name: "gemini-mcp-tool",
-    version: "3.0.2",
+    version: "3.0.3",
 }, {
     capabilities: {
         tools: {},
