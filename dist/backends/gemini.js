@@ -3,23 +3,35 @@
  */
 import { spawn } from 'child_process';
 import { Logger } from '../utils/logger.js';
-import { ERROR_MESSAGES, STATUS_MESSAGES, MODELS, CLI } from '../constants.js';
+import { ERROR_MESSAGES, STATUS_MESSAGES, MODELS, CLI, GEMINI_MODEL_ALIASES } from '../constants.js';
 import { getAllowedEnv } from '../utils/envAllowlist.js';
 import { getChangeModeInstructions } from '../utils/changeModeInstructions.js';
 export class GeminiBackend {
     name = 'gemini';
+    resolveModel(requestedModel) {
+        if (!requestedModel || requestedModel.trim().length === 0) {
+            return MODELS.PRO_3;
+        }
+        const normalized = GEMINI_MODEL_ALIASES[requestedModel] || requestedModel;
+        if (normalized !== requestedModel) {
+            Logger.warn(`Gemini model '${requestedModel}' is deprecated; using '${normalized}' instead.`);
+        }
+        return normalized;
+    }
     async execute(prompt, config, onProgress) {
         // Security: Validate model name to prevent argument injection
         if (config.model && config.model.startsWith('-')) {
             throw new Error(`Invalid model name: model cannot start with '-'`);
         }
         let processedPrompt = prompt;
-        let usedModel = config.model;
+        const model = this.resolveModel(config.model);
+        const primaryModel = model;
+        let usedModel = model;
         // Apply changeMode instructions if enabled
         if (config.changeMode) {
             processedPrompt = this.applyChangeModeInstructions(prompt);
         }
-        const args = this.buildArgs(processedPrompt, config);
+        const args = this.buildArgs(processedPrompt, { ...config, model });
         try {
             const response = await this.executeCommand(args, onProgress, config.cwd);
             return {
@@ -31,7 +43,7 @@ export class GeminiBackend {
         catch (error) {
             // Handle quota exceeded with fallback to Flash model
             const errorMessage = error instanceof Error ? error.message : String(error);
-            if (errorMessage.includes(ERROR_MESSAGES.QUOTA_EXCEEDED) && config.model !== MODELS.FLASH) {
+            if (errorMessage.includes(ERROR_MESSAGES.QUOTA_EXCEEDED) && model !== MODELS.FLASH) {
                 Logger.warn(`${ERROR_MESSAGES.QUOTA_EXCEEDED}. Falling back to ${MODELS.FLASH}.`);
                 onProgress?.(STATUS_MESSAGES.FLASH_RETRY);
                 const fallbackConfig = { ...config, model: MODELS.FLASH };
@@ -51,7 +63,7 @@ export class GeminiBackend {
                     const fallbackErrorMessage = fallbackError instanceof Error
                         ? fallbackError.message
                         : String(fallbackError);
-                    throw new Error(`${MODELS.PRO} quota exceeded, ${MODELS.FLASH} fallback also failed: ${fallbackErrorMessage}`);
+                    throw new Error(`${primaryModel} quota exceeded, ${MODELS.FLASH} fallback also failed: ${fallbackErrorMessage}`);
                 }
             }
             throw error;

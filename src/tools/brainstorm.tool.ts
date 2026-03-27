@@ -120,7 +120,7 @@ const brainstormArgsSchema = z.object({
   prompt: z.string().min(1).describe("Primary brainstorming challenge or question to explore"),
   backend: z.enum(['gemini', 'codex']).optional().describe("AI backend to use: 'gemini' (default) or 'codex'. Gemini offers 1M+ token context, Codex integrates with OpenAI models."),
   session: z.string().optional().describe("Session ID for tracking ideas across rounds (e.g., 'feature-ideas'). Enables iterative brainstorming with context."),
-  model: z.string().optional().describe("Model override. Gemini: 'gemini-3-pro-preview' (default), 'gemini-2.5-pro'. Codex: 'gpt-5.3-codex' (default), 'gpt-5.1-codex-mini', 'gpt-5.2'"),
+  model: z.string().optional().describe("Model override. Gemini: 'gemini-3.1-pro' (default), 'gemini-3-flash', 'gemini-2.5-pro', 'gemini-2.5-flash'. Codex: 'gpt-5.4' (default), 'gpt-5.4-mini', 'gpt-5.3-codex', 'gpt-5.2-codex', 'gpt-5.2'"),
   methodology: z.enum(['divergent', 'convergent', 'scamper', 'design-thinking', 'lateral', 'auto']).default('auto').describe("Brainstorming framework: 'divergent' (generate many ideas), 'convergent' (refine existing), 'scamper' (systematic triggers), 'design-thinking' (human-centered), 'lateral' (unexpected connections), 'auto' (AI selects best)"),
   domain: z.string().optional().describe("Domain context for specialized brainstorming (e.g., 'software', 'business', 'creative', 'research', 'product', 'marketing')"),
   constraints: z.string().optional().describe("Known limitations, requirements, or boundaries (budget, time, technical, legal, etc.)"),

@@ -28,10 +28,15 @@ export const STATUS_MESSAGES = {
 };
 // Models
 export const MODELS = {
-    PRO_3: "gemini-3-pro-preview",
-    FLASH_3: "gemini-3-flash-preview",
+    PRO_3: "gemini-3.1-pro",
+    FLASH_3: "gemini-3-flash",
     PRO: "gemini-2.5-pro",
     FLASH: "gemini-2.5-flash",
+};
+// Backward-compatible model aliases for deprecated Gemini model names
+export const GEMINI_MODEL_ALIASES = {
+    "gemini-3-pro-preview": MODELS.PRO_3,
+    "gemini-3-flash-preview": MODELS.FLASH_3,
 };
 // MCP Protocol Constants
 export const PROTOCOL = {
@@ -75,7 +80,7 @@ export const CLI = {
     },
     // Default values
     DEFAULTS: {
-        MODEL: "default", // Fallback model used when no specific model is provided
+        MODEL: MODELS.PRO_3, // Tool default model used when no specific model is provided
         BOOLEAN_TRUE: "true",
         BOOLEAN_FALSE: "false",
     },
@@ -130,16 +135,13 @@ export const CODEX_OUTPUT = {
 // Codex Models
 export const CODEX_MODELS = {
     // Recommended
-    GPT_5_3_CODEX: 'gpt-5.3-codex', // Latest agentic coding model
-    GPT_5_2_CODEX: 'gpt-5.2-codex', // Most advanced agentic coding model
-    GPT_5_1_CODEX_MINI: 'gpt-5.1-codex-mini', // Smaller, cost-effective
-    // Alternatives
-    GPT_5_1_CODEX_MAX: 'gpt-5.1-codex-max', // Long-horizon agentic coding
-    GPT_5_2: 'gpt-5.2', // General agentic model
-    GPT_5_1: 'gpt-5.1', // Coding and agentic tasks
-    GPT_5_1_CODEX: 'gpt-5.1-codex', // Long-running agentic coding
-    // Default (if not specified, Codex CLI uses its own default)
-    DEFAULT: 'gpt-5.3-codex',
+    GPT_5_4: 'gpt-5.4', // Latest general-purpose model
+    GPT_5_4_MINI: 'gpt-5.4-mini', // Faster/cheaper GPT-5.4 variant
+    GPT_5_3_CODEX: 'gpt-5.3-codex', // Agentic coding model
+    GPT_5_2_CODEX: 'gpt-5.2-codex', // Agentic coding model
+    GPT_5_2: 'gpt-5.2', // General-purpose model
+    // Default (used when no model is specified)
+    DEFAULT: 'gpt-5.4',
 };
 // Shared Session Management Constants
 export const SESSION = {

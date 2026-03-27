@@ -36,7 +36,7 @@ export class CodexBackend {
         return {
             response: result.response,
             backend: this.name,
-            model: config.model ?? CODEX_MODELS.DEFAULT,
+            model: config.model ?? (config.codexThreadId ? undefined : CODEX_MODELS.DEFAULT),
             codexThreadId: result.threadId,
         };
     }
@@ -50,12 +50,11 @@ export class CodexBackend {
     }
     getModels() {
         return [
+            CODEX_MODELS.GPT_5_4,
+            CODEX_MODELS.GPT_5_4_MINI,
             CODEX_MODELS.GPT_5_3_CODEX,
             CODEX_MODELS.GPT_5_2_CODEX,
-            CODEX_MODELS.GPT_5_1_CODEX_MINI,
-            CODEX_MODELS.GPT_5_1_CODEX_MAX,
             CODEX_MODELS.GPT_5_2,
-            CODEX_MODELS.GPT_5_1,
         ];
     }
     supportsFileRefs() {
@@ -67,8 +66,10 @@ export class CodexBackend {
     buildArgs(config) {
         const args = [];
         // Codex parses approval/sandbox options as global flags; place before subcommands.
-        if (config.model) {
-            args.push(CODEX_CLI.FLAGS.MODEL, config.model);
+        // On resume, prefer Codex's thread-associated model unless the user explicitly overrides `model`.
+        const modelToUse = config.model ?? (config.codexThreadId ? undefined : CODEX_MODELS.DEFAULT);
+        if (modelToUse) {
+            args.push(CODEX_CLI.FLAGS.MODEL, modelToUse);
         }
         // Approval mode
         if (config.approvalMode) {

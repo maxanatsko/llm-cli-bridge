@@ -4,6 +4,7 @@
 import { BackendExecutor, BackendConfig, BackendType, BackendResult } from './types.js';
 export declare class GeminiBackend implements BackendExecutor {
     name: BackendType;
+    private resolveModel;
     execute(prompt: string, config: BackendConfig, onProgress?: (output: string) => void): Promise<BackendResult>;
     isAvailable(): Promise<boolean>;
     getModels(): string[];

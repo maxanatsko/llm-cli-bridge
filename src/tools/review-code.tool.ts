@@ -78,7 +78,7 @@ const reviewCodeArgsSchema = z.object({
   model: z
     .string()
     .optional()
-    .describe("Model override. Gemini: 'gemini-3-pro-preview' (default), 'gemini-2.5-pro'. Codex: 'gpt-5.3-codex' (default), 'gpt-5.1-codex-mini', 'gpt-5.2'"),
+    .describe("Model override. Gemini: 'gemini-3.1-pro' (default), 'gemini-3-flash', 'gemini-2.5-pro', 'gemini-2.5-flash'. Codex: 'gpt-5.4' (default), 'gpt-5.4-mini', 'gpt-5.3-codex', 'gpt-5.2-codex', 'gpt-5.2'"),
   reasoningEffort: z
     .enum(['low', 'medium', 'high', 'xhigh'])
     .optional()

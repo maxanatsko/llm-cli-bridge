@@ -1,19 +1,18 @@
 import { executeCommand } from './commandExecutor.js';
 import { Logger } from './logger.js';
-import { ERROR_MESSAGES, STATUS_MESSAGES, MODELS, CLI } from '../constants.js';
+import { ERROR_MESSAGES, STATUS_MESSAGES, MODELS, CLI, GEMINI_MODEL_ALIASES } from '../constants.js';
 import { parseChangeModeOutput, validateChangeModeEdits } from './changeModeParser.js';
 import { formatChangeModeResponse, summarizeChangeModeEdits } from './changeModeTranslator.js';
 import { getChangeModeInstructions } from './changeModeInstructions.js';
 export async function executeGeminiCLI(prompt, model, sandbox, changeMode, onProgress, allowedTools, cwd) {
     let prompt_processed = prompt;
+    const resolvedModel = model ? (GEMINI_MODEL_ALIASES[model] || model) : MODELS.PRO_3;
     if (changeMode) {
         prompt_processed = prompt.replace(/file:(\S+)/g, '@$1');
         prompt_processed = getChangeModeInstructions(prompt_processed);
     }
     const args = [];
-    if (model) {
-        args.push(CLI.FLAGS.MODEL, model);
-    }
+    args.push(CLI.FLAGS.MODEL, resolvedModel);
     if (sandbox) {
         args.push(CLI.FLAGS.SANDBOX);
     }
@@ -33,7 +32,7 @@ export async function executeGeminiCLI(prompt, model, sandbox, changeMode, onPro
     }
     catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
-        if (errorMessage.includes(ERROR_MESSAGES.QUOTA_EXCEEDED) && model !== MODELS.FLASH) {
+        if (errorMessage.includes(ERROR_MESSAGES.QUOTA_EXCEEDED) && resolvedModel !== MODELS.FLASH) {
             Logger.warn(`${ERROR_MESSAGES.QUOTA_EXCEEDED}. Falling back to ${MODELS.FLASH}.`);
             await sendStatusMessage(STATUS_MESSAGES.FLASH_RETRY);
             const fallbackArgs = [];
@@ -60,7 +59,7 @@ export async function executeGeminiCLI(prompt, model, sandbox, changeMode, onPro
             }
             catch (fallbackError) {
                 const fallbackErrorMessage = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
-                throw new Error(`${MODELS.PRO} quota exceeded, ${MODELS.FLASH} fallback also failed: ${fallbackErrorMessage}`);
+                throw new Error(`${resolvedModel} quota exceeded, ${MODELS.FLASH} fallback also failed: ${fallbackErrorMessage}`);
             }
         }
         else {

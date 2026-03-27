@@ -191,7 +191,7 @@ claude mcp list
 # "🧠 Gemini is analyzing your request..."
 
 # Use faster Flash model for large requests
-/gemini-cli:analyze -m gemini-2.5-flash @large-file.js
+/gemini-cli:analyze -m gemini-3-flash @large-file.js
 
 # Break up large analysis into smaller chunks
 /gemini-cli:analyze @specific-function.js explain this function
@@ -207,9 +207,11 @@ claude mcp list
 ### "Token limit exceeded" / "Response exceeds maximum allowed tokens (25000)"
 **Problem**: Error shows response of 45,735 tokens even for small prompts
 
-**Root cause**: Model-specific bug in `gemini-2.5-pro` (default model)
+**Root cause**: Model-specific issue observed with `gemini-2.5-pro` in some environments
 
 **Working models**:
+- ✅ `gemini-3.1-pro` - Recommended default
+- ✅ `gemini-3-flash` - Fast, stable responses
 - ✅ `gemini-2.5-flash` - Works perfectly
 - ❌ `gemini-2.5-pro` - Always returns 45k+ tokens
 - ❌ `gemini-2.0-flash-thinking` - Model not found
@@ -217,10 +219,10 @@ claude mcp list
 **Solutions**:
 ```bash
 # Use Flash model (recommended)
-/gemini-cli:analyze -m gemini-2.5-flash "your prompt"
+/gemini-cli:analyze -m gemini-3-flash "your prompt"
 
 # For large contexts, break into smaller chunks
-/gemini-cli:analyze -m gemini-2.5-flash @file1.js @file2.js
+/gemini-cli:analyze -m gemini-3-flash @file1.js @file2.js
 
 # Alternative: Use Pro for larger contexts when it works
 /gemini-cli:analyze -m gemini-2.5-pro "brief analysis only"
@@ -300,16 +302,16 @@ Enable debug logging:
 
 **Workaround**: Use Gemini Flash instead
 ```bash
-/gemini-cli:analyze -m gemini-2.5-flash "your prompt"
+/gemini-cli:analyze -m gemini-3-flash "your prompt"
 ```
 
 ### Model Recommendations
 | **Use Case** | **Recommended Model** | **Reason** |
 |--------------|----------------------|------------|
-| File analysis | `gemini-2.5-flash` | Faster, stable responses |
-| Code review | `gemini-2.5-flash` | Good balance of speed/quality |
-| Large codebase | `gemini-2.5-flash` | Better timeout handling |
-| Quick questions | `gemini-2.5-flash` | Fast responses |
+| File analysis | `gemini-3-flash` | Faster, stable responses |
+| Code review | `gemini-3-flash` | Good balance of speed/quality |
+| Large codebase | `gemini-3-flash` | Better timeout handling |
+| Quick questions | `gemini-3-flash` | Fast responses |
 
 ## Quick Fixes
 
@@ -333,7 +335,7 @@ gemini "Hello"
 /gemini-cli:ping
 
 # Test file analysis with working model
-/gemini-cli:analyze -m gemini-2.5-flash @README.md summarize
+/gemini-cli:analyze -m gemini-3-flash @README.md summarize
 ```
 
 ## Platform-Specific Issues

@@ -187,7 +187,7 @@ export class GeminiBackend implements BackendExecutor {
   }
 
   getModels(): string[] {
-    return ['gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-3-pro-preview', 'gemini-3-flash-preview'];
+    return ['gemini-3.1-pro', 'gemini-3-flash', 'gemini-2.5-pro', 'gemini-2.5-flash'];
   }
 
   supportsFileRefs(): boolean { return true; }
@@ -237,7 +237,7 @@ export class CodexBackend implements BackendExecutor {
   }
 
   getModels(): string[] {
-    return ['gpt-5-codex', 'o4-mini', 'codex-mini-latest'];
+    return ['gpt-5.4', 'gpt-5.4-mini', 'gpt-5.3-codex', 'gpt-5.2-codex', 'gpt-5.2'];
   }
 
   supportsFileRefs(): boolean { return false; } // Codex reads files directly
@@ -328,9 +328,11 @@ export const CODEX_CLI = {
 } as const;
 
 export const CODEX_MODELS = {
-  GPT5_CODEX: 'gpt-5-codex',
-  O4_MINI: 'o4-mini',
-  CODEX_MINI: 'codex-mini-latest',
+  GPT_5_4: 'gpt-5.4',
+  GPT_5_4_MINI: 'gpt-5.4-mini',
+  GPT_5_3_CODEX: 'gpt-5.3-codex',
+  GPT_5_2_CODEX: 'gpt-5.2-codex',
+  GPT_5_2: 'gpt-5.2',
 } as const;
 ```
 
@@ -448,16 +450,16 @@ export function mapModel(
   // Map generic model names
   const modelMap: Record<string, Record<string, string>> = {
     'fast': {
-      gemini: 'gemini-2.5-flash',
-      codex: 'codex-mini-latest',
+      gemini: 'gemini-3-flash',
+      codex: 'gpt-5.4-mini',
     },
     'smart': {
-      gemini: 'gemini-2.5-pro',
-      codex: 'gpt-5-codex',
+      gemini: 'gemini-3.1-pro',
+      codex: 'gpt-5.4',
     },
     'latest': {
-      gemini: 'gemini-3-pro-preview',
-      codex: 'gpt-5-codex',
+      gemini: 'gemini-3.1-pro',
+      codex: 'gpt-5.4',
     },
   };
 
@@ -488,11 +490,11 @@ export interface MCPConfig {
 export function loadConfig(): MCPConfig {
   return {
     gemini: {
-      defaultModel: process.env.GEMINI_MODEL || 'gemini-2.5-pro',
-      fallbackModel: process.env.GEMINI_FALLBACK || 'gemini-2.5-flash',
+      defaultModel: process.env.GEMINI_MODEL || 'gemini-3.1-pro',
+      fallbackModel: process.env.GEMINI_FALLBACK || 'gemini-3-flash',
     },
     codex: {
-      defaultModel: process.env.CODEX_MODEL || 'gpt-5-codex',
+      defaultModel: process.env.CODEX_MODEL || 'gpt-5.4',
       approvalMode: process.env.CODEX_APPROVAL || 'on-request',
       sandboxMode: process.env.CODEX_SANDBOX || 'workspace-write',
     },

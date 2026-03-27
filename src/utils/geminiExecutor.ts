@@ -4,7 +4,8 @@ import {
   ERROR_MESSAGES,
   STATUS_MESSAGES,
   MODELS,
-  CLI
+  CLI,
+  GEMINI_MODEL_ALIASES
 } from '../constants.js';
 
 import { parseChangeModeOutput, validateChangeModeEdits } from './changeModeParser.js';
@@ -21,6 +22,7 @@ export async function executeGeminiCLI(
   cwd?: string
 ): Promise<string> {
   let prompt_processed = prompt;
+  const resolvedModel = model ? (GEMINI_MODEL_ALIASES[model] || model) : MODELS.PRO_3;
   
   if (changeMode) {
     prompt_processed = prompt.replace(/file:(\S+)/g, '@$1');
@@ -28,7 +30,7 @@ export async function executeGeminiCLI(
   }
   
   const args = [];
-  if (model) { args.push(CLI.FLAGS.MODEL, model); }
+  args.push(CLI.FLAGS.MODEL, resolvedModel);
   if (sandbox) { args.push(CLI.FLAGS.SANDBOX); }
 
   // Add allowed tools for auto-approval (e.g., run_shell_command for git commands)
@@ -49,7 +51,7 @@ export async function executeGeminiCLI(
     return await executeCommand(CLI.COMMANDS.GEMINI, args, onProgress, cwd);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    if (errorMessage.includes(ERROR_MESSAGES.QUOTA_EXCEEDED) && model !== MODELS.FLASH) {
+    if (errorMessage.includes(ERROR_MESSAGES.QUOTA_EXCEEDED) && resolvedModel !== MODELS.FLASH) {
       Logger.warn(`${ERROR_MESSAGES.QUOTA_EXCEEDED}. Falling back to ${MODELS.FLASH}.`);
       await sendStatusMessage(STATUS_MESSAGES.FLASH_RETRY);
       const fallbackArgs = [];
@@ -78,7 +80,7 @@ export async function executeGeminiCLI(
         return result;
       } catch (fallbackError) {
         const fallbackErrorMessage = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
-        throw new Error(`${MODELS.PRO} quota exceeded, ${MODELS.FLASH} fallback also failed: ${fallbackErrorMessage}`);
+        throw new Error(`${resolvedModel} quota exceeded, ${MODELS.FLASH} fallback also failed: ${fallbackErrorMessage}`);
       }
     } else {
       throw error;

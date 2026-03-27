@@ -22,11 +22,12 @@ export declare const STATUS_MESSAGES: {
     readonly PROCESSING_COMPLETE: "✅ Analysis completed successfully";
 };
 export declare const MODELS: {
-    readonly PRO_3: "gemini-3-pro-preview";
-    readonly FLASH_3: "gemini-3-flash-preview";
+    readonly PRO_3: "gemini-3.1-pro";
+    readonly FLASH_3: "gemini-3-flash";
     readonly PRO: "gemini-2.5-pro";
     readonly FLASH: "gemini-2.5-flash";
 };
+export declare const GEMINI_MODEL_ALIASES: Record<string, string>;
 export declare const PROTOCOL: {
     readonly ROLES: {
         readonly USER: "user";
@@ -59,7 +60,7 @@ export declare const CLI: {
         readonly ALLOWED_TOOLS: "--allowed-tools";
     };
     readonly DEFAULTS: {
-        readonly MODEL: "default";
+        readonly MODEL: "gemini-3.1-pro";
         readonly BOOLEAN_TRUE: "true";
         readonly BOOLEAN_FALSE: "false";
     };
@@ -110,14 +111,12 @@ export declare const CODEX_OUTPUT: {
     readonly MAX_JSONL_LINES: 10000;
 };
 export declare const CODEX_MODELS: {
+    readonly GPT_5_4: "gpt-5.4";
+    readonly GPT_5_4_MINI: "gpt-5.4-mini";
     readonly GPT_5_3_CODEX: "gpt-5.3-codex";
     readonly GPT_5_2_CODEX: "gpt-5.2-codex";
-    readonly GPT_5_1_CODEX_MINI: "gpt-5.1-codex-mini";
-    readonly GPT_5_1_CODEX_MAX: "gpt-5.1-codex-max";
     readonly GPT_5_2: "gpt-5.2";
-    readonly GPT_5_1: "gpt-5.1";
-    readonly GPT_5_1_CODEX: "gpt-5.1-codex";
-    readonly DEFAULT: "gpt-5.3-codex";
+    readonly DEFAULT: "gpt-5.4";
 };
 export declare const SESSION: {
     readonly BASE_DIR: ".ai-cli-mcp/sessions";
