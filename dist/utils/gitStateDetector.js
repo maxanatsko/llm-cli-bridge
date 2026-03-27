@@ -3,15 +3,16 @@ import { Logger } from './logger.js';
 /**
  * Gets the current git state of the repository
  * Executes git commands in parallel for better performance
+ * @param cwd Optional working directory to run git commands in
  * @returns GitState object with branch, commit, and status info
  */
-export async function getCurrentGitState() {
+export async function getCurrentGitState(cwd) {
     try {
         // Execute git commands in parallel for better performance
         const [branch, commitHash, statusOutput] = await Promise.all([
-            executeCommand('git', ['rev-parse', '--abbrev-ref', 'HEAD']),
-            executeCommand('git', ['rev-parse', 'HEAD']),
-            executeCommand('git', ['status', '--porcelain'])
+            executeCommand('git', ['rev-parse', '--abbrev-ref', 'HEAD'], undefined, cwd),
+            executeCommand('git', ['rev-parse', 'HEAD'], undefined, cwd),
+            executeCommand('git', ['status', '--porcelain'], undefined, cwd)
         ]);
         const workingTreeClean = statusOutput.trim() === '';
         return {

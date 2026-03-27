@@ -129,7 +129,7 @@ export const reviewCodeTool: UnifiedTool = {
     try {
       // Step 1: Determine session
       onProgress?.('🔍 Detecting git state and session...');
-      const currentGitState = await getCurrentGitState();
+      const currentGitState = await getCurrentGitState(cwd as string | undefined);
       const detectedSessionId = generateSessionId(currentGitState);
 
       // Sanitize user-provided session ID to prevent path traversal

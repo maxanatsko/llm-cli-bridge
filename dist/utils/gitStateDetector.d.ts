@@ -8,9 +8,10 @@ export interface GitState {
 /**
  * Gets the current git state of the repository
  * Executes git commands in parallel for better performance
+ * @param cwd Optional working directory to run git commands in
  * @returns GitState object with branch, commit, and status info
  */
-export declare function getCurrentGitState(): Promise<GitState>;
+export declare function getCurrentGitState(cwd?: string): Promise<GitState>;
 /**
  * Generates a session ID from git state
  * Format: review-{branch}-{shortHash}
