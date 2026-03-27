@@ -1,6 +1,6 @@
 {
   "name": "@maxanatsko/gemini-mcp-tool",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "MCP server for AI CLI integration (Gemini CLI + Codex CLI)",
   "type": "module",
   "main": "dist/index.js",
