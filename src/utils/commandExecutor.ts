@@ -14,7 +14,7 @@ export async function executeCommand(
 
     const childProcess = spawn(command, args, {
       env: getAllowedEnv(),
-      shell: false,
+      shell: process.platform === "win32",
       stdio: ["ignore", "pipe", "pipe"],
       cwd: cwd || process.cwd(),
     });

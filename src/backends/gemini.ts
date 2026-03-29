@@ -95,7 +95,7 @@ export class GeminiBackend implements BackendExecutor {
   async isAvailable(): Promise<boolean> {
     return new Promise((resolve) => {
       const checker = process.platform === 'win32' ? 'where' : 'which';
-      const child = spawn(checker, ['gemini']);
+      const child = spawn(checker, ['gemini'], { shell: true });
       child.on('close', (code) => resolve(code === 0));
       child.on('error', () => resolve(false));
     });
@@ -162,7 +162,7 @@ export class GeminiBackend implements BackendExecutor {
 
       const childProcess = spawn(CLI.COMMANDS.GEMINI, args, {
         env: getAllowedEnv(),
-        shell: false,
+        shell: process.platform === 'win32',
         stdio: ['ignore', 'pipe', 'pipe'],
         cwd: cwd || process.cwd(),
       });
