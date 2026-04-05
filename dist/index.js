@@ -6,8 +6,8 @@ import { Logger } from "./utils/logger.js";
 import { PROTOCOL } from "./constants.js";
 import { getToolDefinitions, getPromptDefinitions, executeTool, toolExists, getPromptMessage } from "./tools/index.js";
 const server = new Server({
-    name: "gemini-mcp-tool",
-    version: "3.0.5",
+    name: "llm-cli-bridge",
+    version: "3.1.0",
 }, {
     capabilities: {
         tools: {},
@@ -183,10 +183,10 @@ server.setRequestHandler(GetPromptRequestSchema, async (request) => {
 });
 // Start the server
 async function main() {
-    Logger.debug("init ai-cli-mcp-server");
+    Logger.debug("init llm-cli-bridge");
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    Logger.debug("ai-cli-mcp-server listening on stdio");
+    Logger.debug("llm-cli-bridge listening on stdio");
 }
 main().catch((error) => { Logger.error("Fatal error:", error); process.exit(1); });
 //# sourceMappingURL=index.js.map

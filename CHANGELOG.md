@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.0] - 2026-04-05
+
+### Breaking Change: Package Renamed
+
+- Package renamed from `@maxanatsko/gemini-mcp-tool` to `@maxanatsko/llm-cli-bridge`
+- New bin alias `llm-cli-bridge` added; existing `gemini-mcp-tool` and `gemini-mcp` aliases preserved for backward compat
+- To migrate: update `npx` commands to use `npx -y @maxanatsko/llm-cli-bridge`; MCP config `command` field can still use `gemini-mcp` or `gemini-mcp-tool` if old package is globally installed
+
 ## [2.1.0]
 
 - Add `allowedTools` parameter for auto-approval in CLI commands
